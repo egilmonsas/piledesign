@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import streamlit as st
+from PIL import Image
 
 from piledesign import cpt, pile, plot, soil
 
@@ -14,7 +15,12 @@ with st.sidebar:
         qc_z = st.number_input("Spissmotstand stigning",0,1000,330,10)
     with st.expander("Jordprofil",True):
         density = st.number_input("Romvekt",0.0,30.0,20.0,0.5)
+        with st.container():
+            phi = st.number_input("Friksjonsvinkel",5,60,35,1)
+            tanphi = st.text(f"tan phi {np.tan(np.deg2rad(phi)):.3f}")
         ground_water = st.number_input("GVS",None,None,6.0,0.5)
+        Nq = st.number_input("Nq",1,1000,30,1)
+        Nq_graph = st.image(Image.open('assets\\Nq.png'))
     with st.expander("Last",False):
         N = st.number_input("Aksiallast [kN]",0,None,500,10)
 # Setup
