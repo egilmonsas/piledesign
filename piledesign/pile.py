@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import numpy as np
 import scipy as sp
 
+from piledesign.material import Material
 from piledesign.soil import SoilProfile
 
 
@@ -22,11 +23,18 @@ class Pile:
         self.diameter=diameter
         self.length=length
         self.shear_ratio=0.3
-    def utilization(self,N,soil:SoilProfile)->float:
-        return N/self.bearing_capacity(soil)
+        self.material=Material(500,7,9)
+    def utilization(self,N,soil:SoilProfile,f_tot:float=1.0)->float:
+        return N/self.bearing_capacity(soil,f_tot)
 
-    def bearing_capacity(self,soil:SoilProfile)->float:
-        return self.shaft_friction(soil) + self.tip_resistance(soil)
+    def section_capacity(self)->float:
+        return np.clip(self.area()*self.material.f_compressive*1000,0.01,None)
+
+    def section_utilization(self,N)->float:
+        return N/self.section_capacity()
+
+    def bearing_capacity(self,soil:SoilProfile,f_tot:float=1.0)->float:
+        return (self.shaft_friction(soil) + self.tip_resistance(soil))/f_tot
 
     def shaft_friction(self,soil)->float:
         tau = lambda z: (soil.pp_eff(z)+soil.a)

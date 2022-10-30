@@ -8,7 +8,7 @@ from piledesign import cpt, pile, plot, soil
 # Inputwidgets
 with st.sidebar:    
     with st.expander("Pel",True):
-        d = st.slider('Diameter', 0.0, 2.0, (0.1, 0.5),0.05)
+        d = st.slider('Diameter', 0.1, 2.0, (0.1, 0.5),0.05)
         L = st.slider('Lengde',0, 30, (0, 30),1)
     with st.expander("CPT-profil",False):
         qc_0 = st.number_input("Spissmotstand z=0",0,10000,5000,100)
@@ -17,7 +17,7 @@ with st.sidebar:
         density = st.number_input("Romvekt",0.0,30.0,20.0,0.5)
         with st.container():
             phi = st.number_input("Friksjonsvinkel",5,60,35,1)
-            tanphi = st.text(f"tan phi {np.tan(np.deg2rad(phi)):.3f}")
+            tanphi = st.text(f"tan(phi) {np.tan(np.deg2rad(phi)):.3f} | tan(rho) {np.tan(np.deg2rad(phi))/1.4:.3f}")
         ground_water = st.number_input("GVS",None,None,6.0,0.5)
         Nq = st.number_input("Nq",1,1000,30,1)
         Nq_graph = st.image(Image.open('assets\\Nq.png'))
