@@ -6,11 +6,10 @@ import numpy as np
 from piledesign import pile, soil
 
 
-def f(s,d, L):
-    p = pile.Pile(d,L)
-    return p.bearing_capacity(s)
-
-def draw_capacity_diagram(p,s,d_range:Tuple[float,float],L_range:Tuple[float,float]):
+def draw_capacity_diagram(s,d_range:Tuple[float,float],L_range:Tuple[float,float]):
+    def f(s,d, L):
+        p = pile.Pile(d,L)
+        return p.bearing_capacity(s)
     d = np.linspace(d_range[0],d_range[1])
     L = np.linspace(L_range[0],L_range[1])
     X, Y = np.meshgrid(d, L)
@@ -18,7 +17,22 @@ def draw_capacity_diagram(p,s,d_range:Tuple[float,float],L_range:Tuple[float,flo
 
     fig, ax =  plt.subplots()
     ax.grid(True)
-    ax.clabel(ax.contour(X,Y, Z,20, colors='black'), inline=True, fontsize=8)
+    ax.clabel(ax.contour(X,Y, Z,10, colors='black'), inline=True, fontsize=8)
+    ax.yaxis.set_inverted(True)
+    return fig
+
+def draw_utilization_diagram(N,s,d_range:Tuple[float,float],L_range:Tuple[float,float]):
+    def f(N,s,d, L):
+        p = pile.Pile(d,L)
+        return p.utilization(N,s)
+    d = np.linspace(d_range[0],d_range[1])
+    L = np.linspace(L_range[0],L_range[1])
+    X, Y = np.meshgrid(d, L)
+    Z = f(N,s,X, Y)
+
+    fig, ax =  plt.subplots()
+    ax.grid(True)
+    ax.clabel(ax.contour(X,Y, Z, np.round(np.linspace(0,1,11),1), colors='black'), inline=True, fontsize=8)
     ax.yaxis.set_inverted(True)
     return fig
 

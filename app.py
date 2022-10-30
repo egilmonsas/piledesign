@@ -15,17 +15,20 @@ with st.sidebar:
     with st.expander("Jordprofil",True):
         density = st.number_input("Romvekt",0.0,30.0,20.0,0.5)
         ground_water = st.number_input("GVS",None,None,6.0,0.5)
-
+    with st.expander("Last",False):
+        N = st.number_input("Aksiallast [kN]",0,None,500,10)
 # Setup
 p = pile.Pile(d,L)
 c = cpt.CPT(qc_0,qc_z)
 s = soil.SoilProfile(density,ground_water_depth=ground_water)
 
 # Plots and layout
-tb_soil,tb_cpt,tb_cap = st.tabs(["Soil","CPTU","Capacity"])
+tb_soil,tb_cpt,tb_cap ,tb_uti= st.tabs(["Jord","CPT","Kapasitet","Utnyttelse"])
 with tb_soil:
     st.pyplot(fig=plot.draw_soil_stress(s,L))
 with tb_cpt:
     st.pyplot(fig=plot.draw_cpt(c,L))
 with tb_cap:
-    st.pyplot(fig=plot.draw_capacity_diagram(p,s,d,L))
+    st.pyplot(fig=plot.draw_capacity_diagram(s,d,L))
+with tb_uti:
+    st.pyplot(fig=plot.draw_utilization_diagram(N,s,d,L))

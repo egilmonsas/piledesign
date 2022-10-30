@@ -22,14 +22,15 @@ class Pile:
         self.diameter=diameter
         self.length=length
         self.shear_ratio=0.3
+    def utilization(self,N,soil:SoilProfile)->float:
+        return N/self.bearing_capacity(soil)
 
     def bearing_capacity(self,soil:SoilProfile)->float:
         return self.shaft_friction(soil) + self.tip_resistance(soil)
 
     def shaft_friction(self,soil)->float:
-        const=self.perimeter()*self.shear_ratio
-        return(const*sp.integrate.quad(lambda z: soil.pp(z),0,10)[0])
-
+        tau = lambda z: (soil.pp_eff(z)+soil.a)
+        return self.shear_ratio*_simpson(tau,0,self.length,10)*self.perimeter()
 
     def tip_resistance(self,soil):
         sigma_pm = (soil.Nq-1)*(soil.pp_eff(self.length)+soil.a)
@@ -40,3 +41,9 @@ class Pile:
 
     def perimeter(self)->float:
         return self._PI * self.diameter
+
+# Some bug in scipy/numpy means we need an explicit integral function
+def _simpson(f,a,b,N_half=10):
+    h=(b-a)/(2*N_half)
+    res = f(a) + f(b) + 4*np.sum([f(2*j-1) for j in range(1,N_half)])+ 2*np.sum([f(2*j) for j in range(1,N_half-1)])
+    return (h/3)*res

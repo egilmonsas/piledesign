@@ -11,7 +11,7 @@ class SoilProfile:
     phi:float = 30
     beta:float = 0
     Nq :float = 30
-    a :float = 0
+    a :float = 20
 
     def pp_eff(self,depth:float)->float:
         return self.pp(depth)-self.u(depth)
