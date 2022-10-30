@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import numpy as np
 import scipy as sp
 
-from soil import SoilProfile
+from piledesign.soil import SoilProfile
 
 
 @dataclass

@@ -3,8 +3,7 @@ from typing import Tuple
 import matplotlib.pyplot as plt
 import numpy as np
 
-import pile
-import soil
+from piledesign import pile, soil
 
 
 def f(s,d, L):

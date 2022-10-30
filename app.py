@@ -2,10 +2,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-import cpt
-import pile
-import plot
-import soil
+from piledesign import cpt, pile, plot, soil
 
 # Inputwidgets
 with st.sidebar:    
