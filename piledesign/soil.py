@@ -1,21 +1,28 @@
-from dataclasses import dataclass
-from typing import List
-
 import numpy as np
 
 from piledesign.cpt import CPT
 
 
-@dataclass
 class SoilProfile:
-    density: float
-    ground_water_depth: float = 0
-    ground_water_density: float = 10
-    phi: float = 30
-    beta: float = 0
-    Nq: float = 30
-    a: float = 20
-    cpts: List[CPT] = []
+    def __init__(
+        self,
+        density: float,
+        ground_water_depth: float = 0,
+        ground_water_density: float = 10,
+        phi: float = 30,
+        beta: float = 0,
+        Nq: float = 30,
+        a: float = 20,
+        cpts: list[CPT] = [],
+    ) -> None:
+        self.density = density
+        self.ground_water_depth = ground_water_depth
+        self.ground_water_density = ground_water_density
+        self.phi = phi
+        self.beta = beta
+        self.Nq = Nq
+        self.a = a
+        self.cpts = cpts
 
     def pp_eff(self, depth: float) -> float:
         return self.pp(depth) - self.u(depth)

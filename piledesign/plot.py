@@ -4,17 +4,18 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from piledesign import pile, soil
+from piledesign.gis import Coordinate
 
 
 def draw_capacity_diagram(
     s, d_range: Tuple[float, float], L_range: Tuple[float, float]
 ):
     def f(s, d, L):
-        p = pile.Pile(d, L)
+        p = pile.Pile(Coordinate(0, 0), d, L)
         return p.bearing_capacity(s, f_tot=1.35)
 
     def fa(s, d, L):
-        p = pile.Pile(d, L)
+        p = pile.Pile(Coordinate(0, 0), d, L)
         return p.section_capacity()
 
     d = np.linspace(d_range[0], d_range[1])
@@ -52,11 +53,12 @@ def draw_utilization_diagram(
     N, s, d_range: Tuple[float, float], L_range: Tuple[float, float]
 ):
     def f(N, s, d, L):
-        p = pile.Pile(d, L)
+        p = pile.Pile(Coordinate(0, 0), d, L)
         return p.utilization(N, s, f_tot=1.35)
 
     def fa(N, d, L):
-        p = pile.Pile(d, L)
+        p = pile.Pile(Coordinate(0, 0), d, L)
+
         return p.section_utilization(N)
 
     d = np.linspace(d_range[0], d_range[1])

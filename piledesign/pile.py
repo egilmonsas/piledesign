@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
 import numpy as np
-import scipy as sp
 
+from piledesign.gis import Coordinate
 from piledesign.material import Material
 from piledesign.soil import SoilProfile
 
@@ -11,7 +11,12 @@ from piledesign.soil import SoilProfile
 class Pile:
     _PI = 3.14159265359
 
-    def __init__(self, diameter: float, length: float):
+    def __init__(
+        self,
+        pos: Coordinate,
+        diameter: float,
+        length: float,
+    ):
         """
         Parameters
         ----------
@@ -21,6 +26,7 @@ class Pile:
         length : float
             Length of pile [m]
         """
+        self.pos = pos
         self.diameter = diameter
         self.length = length
         self.shear_ratio = 0.3
