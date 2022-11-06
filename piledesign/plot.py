@@ -11,27 +11,27 @@ from piledesign.gis import Coordinate
 def draw_capacity_diagram(
     solver_type: SolverType,
     s,
+    p,
     d_range: Tuple[float, float],
     L_range: Tuple[float, float],
 ):
-    def f(s, d, L):
-        p = pile.Pile(Coordinate(0, 0), d, L)
+    def f(s, p, d, L):
+        p.diameter = d
+        p.length = L
         return p.bearing_capacity(solver_type, s, f_tot=1.35)
 
-    def fa(s, d, L):
-        p = pile.Pile(Coordinate(0, 0), d, L)
+    def fa(s, p, d, L):
+        p.diameter = d
+        p.length = L
         return p.section_capacity()
 
     d = np.linspace(d_range[0], d_range[1])
     L = np.linspace(L_range[0], L_range[1])
     X, Y = np.meshgrid(d, L)
-    Z = f(s, X, Y)
-    Za = fa(s, X, Y)
+    Z = f(s, p, X, Y)
+    Za = fa(s, p, X, Y)
 
     lines = [
-        200,
-        300,
-        400,
         500,
         600,
         800,
@@ -57,23 +57,25 @@ def draw_utilization_diagram(
     solver_type: SolverType,
     N,
     s,
+    p,
     d_range: Tuple[float, float],
     L_range: Tuple[float, float],
 ):
-    def f(N, s, d, L):
-        p = pile.Pile(Coordinate(0, 0), d, L)
+    def f(N, s, p, d, L):
+        p.diameter = d
+        p.length = L
         return p.utilization(solver_type, N, s, f_tot=1.35)
 
-    def fa(N, d, L):
-        p = pile.Pile(Coordinate(0, 0), d, L)
-
+    def fa(N, s, p, d, L):
+        p.diameter = d
+        p.length = L
         return p.section_utilization(N)
 
     d = np.linspace(d_range[0], d_range[1])
     L = np.linspace(L_range[0], L_range[1])
     X, Y = np.meshgrid(d, L)
-    Z = f(N, s, X, Y)
-    Za = fa(N, X, Y)
+    Z = f(N, s, p, X, Y)
+    Za = fa(N, s, p, X, Y)
 
     fig, ax = plt.subplots()
     ax.grid(True)
