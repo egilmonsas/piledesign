@@ -18,7 +18,7 @@ def draw_capacity_diagram(
     def f(s, p, d, L):
         p.diameter = d
         p.length = L
-        return p.bearing_capacity(solver_type, s, f_tot=1.35)
+        return p.bearing_capacity(solver_type, s, gamma_tot=1.45 / 1.1)
 
     def fa(s, p, d, L):
         p.diameter = d
@@ -48,6 +48,7 @@ def draw_capacity_diagram(
     ax.grid(True)
     ax.clabel(ax.contour(X, Y, Za, lines, colors="red"), inline=True, fontsize=8)
     ax.clabel(ax.contour(X, Y, Z, lines, colors="black"), inline=True, fontsize=8)
+    ax.contour(X, Y, Za - Z, [0], colors="green")
     ax.yaxis.set_inverted(True)
     ax.xaxis.tick_top()
     return fig
@@ -64,7 +65,7 @@ def draw_utilization_diagram(
     def f(N, s, p, d, L):
         p.diameter = d
         p.length = L
-        return p.utilization(solver_type, N, s, f_tot=1.35)
+        return p.utilization(solver_type, N, s, gamma_tot=1.45 / 1.1)
 
     def fa(N, s, p, d, L):
         p.diameter = d
@@ -89,6 +90,8 @@ def draw_utilization_diagram(
         inline=True,
         fontsize=8,
     )
+    ax.contour(X, Y, Za - Z, [0], colors="green")
+
     ax.yaxis.set_inverted(True)
     ax.xaxis.tick_top()
     return fig

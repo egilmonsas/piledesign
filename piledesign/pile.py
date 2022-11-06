@@ -13,6 +13,7 @@ from piledesign.soil import SoilProfile
 @dataclass
 class Pile:
     _PI = 3.14159265359
+    _g = 9.82
 
     def __init__(
         self,
@@ -20,6 +21,7 @@ class Pile:
         diameter: float,
         length: float,
         material: Material = material_preset(MaterialType.WOOD),
+        roughness_ratio: float = -0.9,
     ):
         """
         Parameters
@@ -33,11 +35,11 @@ class Pile:
         self.pos = pos
         self.diameter = diameter
         self.length = length + 0.1  ### SHIT SOLUTION PLEASE FIX
-        self.shear_ratio = 0.3
+        self.roughness_ratio = roughness_ratio
         self.material = material
 
     def weight(self):
-        return self.volume() * self.material.density
+        return self.volume() * self.material.density * self._g / 1000
 
     def volume(self):
         return self.area() * self.length
@@ -49,12 +51,12 @@ class Pile:
         return N / self.section_capacity()
 
     def utilization(
-        self, solver_type: SolverType, N, soil: SoilProfile, f_tot: float = 1.0
+        self, solver_type: SolverType, N, soil: SoilProfile, gamma_tot: float = 1.1
     ) -> float:
-        return N / self.bearing_capacity(solver_type, soil, f_tot)
+        return N / self.bearing_capacity(solver_type, soil, gamma_tot)
 
     def bearing_capacity(
-        self, solvertype: SolverType, soil: SoilProfile, f_tot: float = 1.0
+        self, solvertype: SolverType, soil: SoilProfile, gamma_tot: float = 1.1
     ) -> float:
         s = Nordal(self, soil)
         match solvertype:
@@ -62,7 +64,7 @@ class Pile:
                 s = Nordal(self, soil)
             case SolverType.NGI99:
                 s = NGI99(self, soil)
-        return s.bearing_capacity() - self.weight()
+        return s.bearing_capacity() / gamma_tot - self.weight()
 
     def area(self) -> float:
         return self._PI / 4 * self.diameter**2

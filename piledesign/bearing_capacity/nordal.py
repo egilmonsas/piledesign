@@ -20,11 +20,13 @@ class Nordal:
 
     def shaft_friction(self) -> float:
         tau = lambda z: (self.soil_profile.pp_eff(z) + self.soil_profile.a)
-        return (
-            self.pile.shear_ratio
-            * simpson(tau, 0, self.pile.length, 10)
-            * self.pile.perimeter()
-        )
+        return self.Sv() * simpson(tau, 0, self.pile.length, 10) * self.pile.perimeter()
+
+    def Sv(self) -> float:
+        r = self.pile.roughness_ratio
+        tanro = -np.tan(np.deg2rad(self.soil_profile.phi)) / 1.25  # Fix this
+        Sv = (r * tanro) / (((1 + tanro**2) ** 0.5 - tanro * (1 + r) ** 0.5) ** 2)
+        return Sv
 
     def tip_resistance(self) -> float:
         sigma_pm = (self.soil_profile.Nq - 1) * (
