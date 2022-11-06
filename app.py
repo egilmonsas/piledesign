@@ -11,6 +11,9 @@ from piledesign.bearing_capacity.ngi99 import NGI99
 from piledesign.gis import Coordinate
 from piledesign.material import MaterialType, material_preset
 
+st.set_page_config(page_title="EMs-Piledesign", page_icon="🏗", menu_items=None)
+
+
 # Inputwidgets
 with st.sidebar:
     with st.expander("Pel", False):
