@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from piledesign.gis import Coordinate
+from piledesign.gis import Coordinate  # type: ignore
 
 
 @dataclass

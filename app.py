@@ -6,6 +6,7 @@ import streamlit as st
 from PIL import Image
 
 from piledesign import cpt, pile, plot, soil
+from piledesign.bearing_capacity import SolverType
 from piledesign.bearing_capacity.ngi99 import NGI99
 from piledesign.gis import Coordinate
 
@@ -32,26 +33,31 @@ with st.sidebar:
 # Setup
 origin = Coordinate(0, 0)
 
-p = pile.Pile(origin, d, L)
+p = pile.Pile(origin, d[1], L[1])
 s = soil.SoilProfile(
     density,
     ground_water_depth=ground_water,
     cpts=[
         cpt.CPT(
             pos=Coordinate(random.randrange(-100, 100), random.randrange(-100, 100)),
-            qc_0=random.randrange(3500, 4000),
-            qc_z=random.randrange(280, 350),
+            qc_0=random.randrange(3000, 5000),
+            qc_z=random.randrange(250, 350),
         )
+        for _ in range(5)
     ],
 )
-c = NGI99(p, s).get_interpolated_cpt()
+ngi99 = NGI99(p, s)
+c = ngi99.get_interpolated_cpt()
+
 # Plots and layout
+solver_choice = st.selectbox("Løsningsmetode", ("NORDAL", "NGI99"))
+solver = SolverType(solver_choice)
 tb_soil, tb_cpt, tb_cap, tb_uti = st.tabs(["Jord", "CPT", "Kapasitet", "Utnyttelse"])
 with tb_soil:
     st.pyplot(fig=plot.draw_soil_stress(s, L))
 with tb_cpt:
     st.pyplot(fig=plot.draw_cpt(c, L))
 with tb_cap:
-    st.pyplot(fig=plot.draw_capacity_diagram(s, d, L))
+    st.pyplot(fig=plot.draw_capacity_diagram(solver, s, d, L))
 with tb_uti:
-    st.pyplot(fig=plot.draw_utilization_diagram(N, s, d, L))
+    st.pyplot(fig=plot.draw_utilization_diagram(solver, N, s, d, L))

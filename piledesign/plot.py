@@ -4,15 +4,19 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from piledesign import pile, soil
+from piledesign.bearing_capacity import SolverType
 from piledesign.gis import Coordinate
 
 
 def draw_capacity_diagram(
-    s, d_range: Tuple[float, float], L_range: Tuple[float, float]
+    solver_type: SolverType,
+    s,
+    d_range: Tuple[float, float],
+    L_range: Tuple[float, float],
 ):
     def f(s, d, L):
         p = pile.Pile(Coordinate(0, 0), d, L)
-        return p.bearing_capacity(s, f_tot=1.35)
+        return p.bearing_capacity(solver_type, s, f_tot=1.35)
 
     def fa(s, d, L):
         p = pile.Pile(Coordinate(0, 0), d, L)
@@ -50,11 +54,15 @@ def draw_capacity_diagram(
 
 
 def draw_utilization_diagram(
-    N, s, d_range: Tuple[float, float], L_range: Tuple[float, float]
+    solver_type: SolverType,
+    N,
+    s,
+    d_range: Tuple[float, float],
+    L_range: Tuple[float, float],
 ):
     def f(N, s, d, L):
         p = pile.Pile(Coordinate(0, 0), d, L)
-        return p.utilization(N, s, f_tot=1.35)
+        return p.utilization(solver_type, N, s, f_tot=1.35)
 
     def fa(N, d, L):
         p = pile.Pile(Coordinate(0, 0), d, L)
